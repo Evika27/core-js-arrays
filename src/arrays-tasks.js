@@ -110,7 +110,7 @@ function getStringsLength(arr) {
 }
 
 /**
- * Returns the average of all items in the specified array of numbers.
+ * Returns the average of all items in the specified array of arr.
  * The result should be rounded to two decimal places.
  *
  * @param {array} arr - The input array
@@ -339,15 +339,25 @@ function calculateBalance(/* arr */) {
  *    createChunks(['a', 'b', 'c', 'd', 'e'], 2) => [['a', 'b'], ['c', 'd'], ['e']]
  *    createChunks([10, 20, 30, 40, 50], 1) => [[10], [20], [30], [40], [50]]
  */
-function createChunks(/* arr, chunkSize */) {
-  throw new Error('Not implemented');
+function createChunks(arr, chunkSize) {
+  return arr.reduce((chunks, item, index) => {
+    const chunkIndex = Math.floor(index / chunkSize);
+    const updatedChunks = [...chunks];
+
+    if (!updatedChunks[chunkIndex]) {
+      updatedChunks[chunkIndex] = [];
+    }
+    updatedChunks[chunkIndex].push(item);
+
+    return updatedChunks;
+  }, []);
 }
 
 /**
- * Generates an array of odd numbers of the specified length.
+ * Generates an array of odd arr of the specified length.
  *
  * @param {number} len - The length of an array.
- * @return {array} - An array of odd numbers.
+ * @return {array} - An array of odd arr.
  *
  * @example
  *    generateOdds(0) => []
@@ -416,25 +426,20 @@ function getIdentityMatrix(/* n */) {
 /**
  * Returns an array containing indices of odd elements in the input array.
  *
- * @param {array} numbers - The array of numbers.
+ * @param {array} arr - The array of arr.
  * @return {array} - An array containing indices of odd elements.
  *
  * @example
- *    getIndicesOfOddNumbers([1, 2, 3, 4, 5]) => [0, 2, 4]
- *    getIndicesOfOddNumbers([2, 4, 6, 8, 10]) => []
- *    getIndicesOfOddNumbers([11, 22, 33, 44, 55]) => [0, 2, 4]
+ *    getIndicesOfOddarr([1, 2, 3, 4, 5]) => [0, 2, 4]
+ *    getIndicesOfOddarr([2, 4, 6, 8, 10]) => []
+ *    getIndicesOfOddarr([11, 22, 33, 44, 55]) => [0, 2, 4]
  */
-function getIndicesOfOddNumbers(numbers) {
-  return numbers.reduce((indices, val, i) => {
-    if (val % 2 === 1) {
-      indices.push(i);
-    }
-    return indices;
-  }, []);
+function getIndicesOfOddNumbers(arr) {
+  return arr.map((num, i) => (num % 2 ? i : -1)).filter((i) => i !== -1);
 }
 
 /**
- * Returns the array of RGB Hex strings from the specified array of numbers.
+ * Returns the array of RGB Hex strings from the specified array of arr.
  *
  * @param {array} arr - The input array.
  * @return {array} - The array of RGB Hex strings.
@@ -461,8 +466,8 @@ function getHexRGBValues(/* arr */) {
  *   getMaxItems([ 10, 2, 7, 5, 3, -5 ], 3) => [ 10, 7, 5 ]
  *   getMaxItems([ 10, 10, 10, 10 ], 3) => [ 10, 10, 10 ]
  */
-function getMaxItems(/* arr, n */) {
-  throw new Error('Not implemented');
+function getMaxItems(arr, n) {
+  return arr.sort((a, b) => b - a).slice(0, n);
 }
 
 /**
@@ -477,8 +482,8 @@ function getMaxItems(/* arr, n */) {
  *    findCommonElements(['a', 'b', 'c'], ['b', 'c', 'd']) => [ 'b', 'c' ]
  *    findCommonElements([1, 2, 3], ['a', 'b', 'c']) => []
  */
-function findCommonElements(/* arr1, arr2 */) {
-  throw new Error('Not implemented');
+function findCommonElements(arr1, arr2) {
+  return arr1.filter((char) => arr2.includes(char));
 }
 
 /**
@@ -492,8 +497,25 @@ function findCommonElements(/* arr1, arr2 */) {
  *    findLongestIncreasingSubsequence([3, 10, 2, 1, 20]) => longest is [3, 10] and [1, 20] => 2
  *    findLongestIncreasingSubsequence([50, 3, 10, 7, 40, 80]) => longest is [7, 40, 80] => 3
  */
-function findLongestIncreasingSubsequence(/* nums */) {
-  throw new Error('Not implemented');
+function findLongestIncreasingSubsequence(nums) {
+  if (nums.length === 0) return 0;
+
+  let maxLen = 0;
+  let currentLen = 1;
+
+  nums.reduce((prev, curr) => {
+    if (curr > prev) {
+      currentLen += 1;
+    } else {
+      maxLen = Math.max(maxLen, currentLen);
+      currentLen = 1;
+    }
+    return curr;
+  });
+
+  maxLen = Math.max(maxLen, currentLen);
+
+  return maxLen;
 }
 
 /**
@@ -510,10 +532,9 @@ function findLongestIncreasingSubsequence(/* nums */) {
  *  propagateItemsByPositionIndex([ 'a', 'b', 'c', null ]) => [ 'a', 'b', 'b', 'c', 'c', 'c',  null, null, null, null ]
  *  propagateItemsByPositionIndex([ 1,2,3,4,5 ]) => [ 1, 2, 2, 3, 3, 3, 4, 4, 4, 4, 5, 5, 5, 5, 5 ]
  */
-function propagateItemsByPositionIndex(/* arr */) {
-  throw new Error('Not implemented');
+function propagateItemsByPositionIndex(arr) {
+  return arr.flatMap((item, index) => Array(index + 1).fill(item));
 }
-
 /**
  * Shifts an array by n positions. If n is negative, the array is shifted to the left;
  * if positive, it is shifted to the right.
@@ -527,10 +548,11 @@ function propagateItemsByPositionIndex(/* arr */) {
  *    shiftArray(['a', 'b', 'c', 'd'], -1) => ['b', 'c', 'd', 'a']
  *    shiftArray([10, 20, 30, 40, 50], -3) => [40, 50, 10, 20, 30]
  */
-function shiftArray(/* arr, n */) {
-  throw new Error('Not implemented');
+function shiftArray(arr, n) {
+  const l = arr.length;
+  const shift = ((n % l) + l) % l;
+  return arr.slice(-shift).concat(arr.slice(0, -shift));
 }
-
 /**
  * Sorts digit names.
  *
@@ -544,8 +566,23 @@ function shiftArray(/* arr, n */) {
  *   sortDigitNamesByNumericOrder([ 'nine','eight','nine','eight' ]) => [ 'eight','eight','nine','nine']
  *   sortDigitNamesByNumericOrder([ 'one','one','one','zero' ]) => [ 'zero','one','one','one' ]
  */
-function sortDigitNamesByNumericOrder(/* arr */) {
-  throw new Error('Not implemented');
+function sortDigitNamesByNumericOrder(arr) {
+  const numOrder = [
+    'zero',
+    'one',
+    'two',
+    'three',
+    'four',
+    'five',
+    'six',
+    'seven',
+    'eight',
+    'nine',
+  ];
+
+  return [...arr].sort((a, b) => {
+    return numOrder.indexOf(a) - numOrder.indexOf(b);
+  });
 }
 
 /**
@@ -567,8 +604,22 @@ function sortDigitNamesByNumericOrder(/* arr */) {
  *   swapHeadAndTail([]) => []
  *
  */
-function swapHeadAndTail(/* arr */) {
-  throw new Error('Not implemented');
+function swapHeadAndTail(arr) {
+  const len = arr.length;
+
+  if (arr.length <= 1) {
+    return arr;
+  }
+
+  const middleInd = Math.floor(arr.length / 2);
+  const head = arr.slice(0, middleInd);
+  const tail = arr.slice(-middleInd);
+
+  if (len % 2 === 0) {
+    return [...tail, ...head];
+  }
+
+  return [...tail, arr[middleInd], ...head];
 }
 
 module.exports = {
